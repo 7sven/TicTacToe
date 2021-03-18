@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 """
 Creates the select screen on which you can chose between the two game modes
@@ -34,34 +35,70 @@ would have used enum or because this i python a dictionary
 """
 player = True
 
+win_condition = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]]
+
+
+def check_for_win():
+    global button
+    global win_condition
+    xs = [i for i in range(9) if button[i].cget('text') == 'X']
+    os = [i for i in range(9) if button[i].cget('text') == 'O']
+    for i in range(len(win_condition)):
+        if all([elem in xs for elem in win_condition[i]]) or all([elem in os for elem in win_condition[i]]):
+            return True
+    return False
+
+
 """
 function which handles what it should show when one of the nine tic tac toe buttons is pressed
+
 """
-# TODO  different game modes, check if game ends (yet not included)
+
+
 def press_button(button_number):
+    global button
     global player
+    global select_screen
+    global single_player
+    global multi_player
     if player:
         button[button_number].configure(text="X", state='disabled')
     else:
         button[button_number].configure(text="O", state='disabled')
+    if check_for_win():
+        winner = "Player one won"
+        if not player:
+            winner = "Player two won"
+        if not tk.messagebox.askyesno(message=winner + "\nDo you want to play again?"):
+            on_closing()
+        button = []
+        single_player.withdraw()
+        multi_player.withdraw()
+        select_screen.deiconify()
+        player = True
+        return
     player = not player
 
 
 """
 a function which creates nine buttons
 """
+
+
 def create_buttons(window):
     global button
     for i in range(9):
         button.append(tk.Button(master=window, width=20, height=8, command=lambda x=i: press_button(x)))
     for i in range(3):
         for j in range(3):
-            button[(i * 3) + j].grid(column=i, row=j, sticky="NESW", padx=5, pady=5)
+            button[(i * 3) + j].grid(column=j, row=i, sticky="NESW", padx=5, pady=5)
 
 
 """
 function of what happens when multi player is chosen
 """
+
+
 def multy_gamemode():
     select_screen.withdraw()
     multi_player.deiconify()
@@ -71,6 +108,8 @@ def multy_gamemode():
 """
 function so that every window is closed when you click on the cross, the protocols are the caller of the function
 """
+
+
 def on_closing():
     select_screen.destroy()
     single_player.destroy()
