@@ -37,6 +37,12 @@ player = True
 
 win_condition = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]]
 
+"""
+function which checks if either the x's or the o's are in line horizontally or diagonal if so it return true
+if there is no winner the function will return false
+if there is no winner and every button is pressed a draw message will appear and you can either go back to the select 
+screen or end the program
+"""
 
 def check_for_win():
     global button
@@ -46,6 +52,10 @@ def check_for_win():
     for i in range(len(win_condition)):
         if all([elem in xs for elem in win_condition[i]]) or all([elem in os for elem in win_condition[i]]):
             return True
+    if len(xs) + len(os) == 9:
+        if not tk.messagebox.askyesno(message="Draw\nDo you want to play again?"):
+            on_closing()
+        clear()
     return False
 
 
@@ -71,14 +81,25 @@ def press_button(button_number):
             winner = "Player two won"
         if not tk.messagebox.askyesno(message=winner + "\nDo you want to play again?"):
             on_closing()
-        button = []
-        single_player.withdraw()
-        multi_player.withdraw()
-        select_screen.deiconify()
-        player = True
+        clear()
         return
     player = not player
 
+"""
+function which resets everything to its intial functionality. also switches back to select screen
+"""
+
+def clear():
+    global button
+    global player
+    global select_screen
+    global single_player
+    global multi_player
+    button = []
+    single_player.withdraw()
+    multi_player.withdraw()
+    select_screen.deiconify()
+    player = True
 
 """
 a function which creates nine buttons
