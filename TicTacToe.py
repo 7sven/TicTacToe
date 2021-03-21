@@ -36,6 +36,9 @@ would have used enum or because this i python a dictionary
 """
 player = True
 
+"""
+list with all possible win conditions in form of position numbers starting from the left upper corner and the number 0
+"""
 win_condition = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6], [0, 3, 6], [1, 4, 7], [2, 5, 8]]
 
 """
@@ -143,7 +146,6 @@ def press_single_button(button_number):
 
 """
 function which handles what it should show when one of the nine tic tac toe buttons is pressed
-
 """
 
 
