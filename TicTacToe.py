@@ -75,17 +75,55 @@ def check_for_win(gamemode):
 
 
 """
-function in which an 'ai' chooses it's button it wants to press
+made a function in which i can calculate if there is a possible way to win in the next step,
+since i needed the same thing in two places shortly after each other but with different values I decided to make this
+function to reduce code
 """
 
 
-# TODO give ai a real choice so it chooses intelligent
+def win_in_next_step(xsos, remaining):
+    global win_condition
+    for i in win_condition:
+        occupied = []
+        for j in i:
+            if j in xsos:
+                occupied.append(j)
+        if len(occupied) == 2:
+            topress = [element for element in i if element not in occupied]
+            if topress[0] in remaining:
+                return topress[0]
+    return -1
+
+
+"""
+function in which an 'ai' chooses it's button it wants to press, I could improve it further so that every game would end
+in a draw, however only to be able to achieve a draw is not necessarily fun
+The way it works is that it looks if it can win, if so it does so
+the second step is to look if the player could win, if so the ai places it O there to block
+if neither of the first steps are done, the ai checks if the middle button is pressed since it is the most vulnerable
+position, otherwise it presses a random button (here I could improve more), it is also still possible to win as a player 
+"""
+
+
 def ai_choice():
     global button
     all_num = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     xs = [i for i in range(9) if button[i].cget('text') == 'X']
     os = [i for i in range(9) if button[i].cget('text') == 'O']
     remaining = list(set(all_num) - set(xs + os))
+    # this part checks if the ai can win
+    placement = win_in_next_step(os, remaining)
+    if placement != -1:
+        button[placement].configure(text='O', state='disabled')
+        return
+    # this part checks if the player could win and blocks it
+    placement = win_in_next_step(xs, remaining)
+    if placement != -1:
+        button[placement].configure(text='O', state='disabled')
+        return
+    if 4 in remaining:
+        button[4].configure(text='O', state='disabled')
+        return
     button[random.choice(remaining)].configure(text='O', state='disabled')
 
 
