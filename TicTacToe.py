@@ -127,6 +127,8 @@ def ai_choice():
     if 4 in remaining:
         button[4].configure(text='O', state='disabled')
         return
+    # if you place the button in a corner it always would be at least a draw for the ai
+    # would be easy to implement but would sacrifice the fun of the player
     button[random.choice(remaining)].configure(text='O', state='disabled')
 
 
